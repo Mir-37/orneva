@@ -8,6 +8,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Form;
 use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 
@@ -20,6 +21,14 @@ class ProductForm
                 Section::make()
                     ->columnSpanFull()
                     ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                FileUpload::make('image')
+                                    ->disk('products')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->required()
+                            ]),
                         Grid::make(2)
                             ->schema([
                                 Select::make('category_id')
