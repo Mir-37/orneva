@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Brand::class)->nullable();
+            $table->foreignIdFor(Brand::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('sku')->nullable()->unique();
             $table->string('slug')->nullable()->unique();
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('rating')->nullable();
             $table->foreignId('rated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->json('extras')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
