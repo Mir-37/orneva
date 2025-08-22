@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Carts\Schemas;
 
-use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\TextInput;
 
 class CartForm
 {
@@ -16,6 +17,8 @@ class CartForm
                     ->numeric(),
                 TextInput::make('product_id')
                     ->numeric(),
+                Toggle::make('is_active')
+                    ->default(true)
             ]);
     }
 }

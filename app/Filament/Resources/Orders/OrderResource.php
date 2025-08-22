@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Orders;
 use App\Filament\Resources\Orders\Pages\CreateOrder;
 use App\Filament\Resources\Orders\Pages\EditOrder;
 use App\Filament\Resources\Orders\Pages\ListOrders;
+use App\Filament\Resources\Orders\RelationManagers\OrderItemsRelationManager;
 use App\Filament\Resources\Orders\Schemas\OrderForm;
 use App\Filament\Resources\Orders\Tables\OrdersTable;
 use App\Models\Order;
@@ -20,6 +21,9 @@ class OrderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $recordTitleAttribute = 'order_no';
+
+
     public static function form(Schema $schema): Schema
     {
         return OrderForm::configure($schema);
@@ -33,7 +37,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OrderItemsRelationManager::class
         ];
     }
 

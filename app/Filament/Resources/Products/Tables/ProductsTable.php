@@ -14,20 +14,14 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('category_id')
-                    ->numeric()
+                TextColumn::make('category.name')
                     ->sortable(),
-                TextColumn::make('brand_id')
-                    ->numeric()
+                TextColumn::make('brand.name')
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('sku')
                     ->label('SKU')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('stock')
                     ->numeric()
@@ -37,12 +31,6 @@ class ProductsTable
                     ->sortable(),
                 TextColumn::make('flag')
                     ->searchable(),
-                TextColumn::make('rating')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('rated_by')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

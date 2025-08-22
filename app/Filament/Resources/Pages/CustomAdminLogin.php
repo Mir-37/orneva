@@ -41,7 +41,7 @@ class CustomAdminLogin extends Login
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
-            'data.login_id' => __('filament-panels::pages/auth/login.messages.failed'),
+            'data.login_id' => "Invalid credentials. Please try again",
         ]);
     }
 }
