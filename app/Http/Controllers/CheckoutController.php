@@ -81,7 +81,6 @@ class CheckoutController extends Controller
         Notification::make()
             ->title('You received a new order')
             ->body("A new order (#{$order->order_no}) has been placed.")
-            ->url(OrderResource::getUrl())
             ->success()
             ->sendToDatabase($admins);
 
