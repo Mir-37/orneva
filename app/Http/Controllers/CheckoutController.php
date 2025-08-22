@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Customer\Resources\Orders\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Str;
@@ -32,8 +33,6 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:cod,bkash',
         ]);
 
-        $order = new Order;
-
         $user = Auth::user();
         $cartItems = $user->carts()->where('is_active', true)->with('product')->get();
 
@@ -43,10 +42,10 @@ class CheckoutController extends Controller
 
         $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
 
-        DB::transaction(function () use ($user, $cartItems, $subtotal, $request, $order) {
-
+        // Use the Order model directly, not $order
+        $order = DB::transaction(function () use ($user, $cartItems, $subtotal, $request) {
             // Create Order
-            $order = $order::create([
+            $order = Order::create([
                 'order_no' => 'ORD-' . Str::upper(Str::random(8)),
                 'user_id' => $user->id,
                 'total_amount' => $subtotal,
@@ -61,7 +60,6 @@ class CheckoutController extends Controller
                     throw new \Exception("Product {$product->name} is out of stock.");
                 }
 
-                // Create Order Item with quantity and price
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
@@ -69,21 +67,26 @@ class CheckoutController extends Controller
                     'price' => $product->price,
                 ]);
 
-                // Decrease stock
                 $product->decrement('stock', $item->quantity);
             }
 
             // Clear Cart
             $user->carts()->where('is_active', true)->delete();
+
+            return $order; // Make sure to return it!
         });
+
         $admins = User::where('role', 'admin')->get();
 
         Notification::make()
             ->title('You received a new order')
             ->body("A new order (#{$order->order_no}) has been placed.")
+            ->url(OrderResource::getUrl())
             ->success()
             ->sendToDatabase($admins);
 
-        return redirect()->route('orders.show', $order->id)->with('success', 'Order placed successfully!');
+        return redirect()
+            ->route('orders.show', ['order' => $order->id])
+            ->with('success', 'Order placed successfully!');
     }
 }

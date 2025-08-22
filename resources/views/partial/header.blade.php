@@ -1,6 +1,6 @@
 {{-- Header --}}
 <section id="header">
-    <a href="{{ route('home') }}"><img src="{{ asset('img/logo.png') }}" class="logo" alt=""></a>
+    <a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo.png') }}" class="logo" alt=""></a>
     <div>
         <ul id="navbar">
             <li><a class="active" href="{{ route('home') }}">Home</a></li>

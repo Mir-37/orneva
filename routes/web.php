@@ -9,7 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NewsletterController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/shop', fn() => view('shop.index'))->name('shop.index');
+// Route::get('/shop', fn() => view('shop.index'))->name('shop.index');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');

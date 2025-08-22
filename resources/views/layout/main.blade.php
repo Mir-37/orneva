@@ -49,6 +49,8 @@
             toastr.error("{{ session('error') }}");
         @endif
     </script>
+
+    @stack('scripts')
 </body>
 
 </html>

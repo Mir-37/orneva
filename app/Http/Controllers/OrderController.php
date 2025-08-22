@@ -17,6 +17,6 @@ class OrderController extends Controller
 
         $order->load('orderItems.product.brand'); // Eager load relationships
 
-        return view('orders', compact('order'));
+        return view('order', compact('order'));
     }
 }

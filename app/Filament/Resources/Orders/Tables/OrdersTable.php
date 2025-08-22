@@ -22,7 +22,7 @@ class OrdersTable
                 TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),
-                IconColumn::make('status')
+                TextColumn::make('status')
                     ->icon(fn(string $state): string => match ($state) {
                         'pending'    => 'heroicon-o-clock',
                         'processing' => 'heroicon-o-arrow-path',

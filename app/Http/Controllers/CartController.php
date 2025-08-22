@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Customer\Pages\CustomerLogin;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Filament\Auth\Pages\Login;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -13,7 +15,7 @@ class CartController extends Controller
     public function index()
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please login to view your cart.');
+            return redirect()->back()->with('error', 'Please login to view your cart.');
         }
 
         $cartItems = Cart::with('product')
@@ -29,16 +31,20 @@ class CartController extends Controller
     public function add(Request $request, $productId)
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must login to add items to cart.');
+            return redirect()->back()->with('error', 'You must login to add items to cart.');
         }
 
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
-        ]);
+        $quantity = $request->input('quantity') ?? 1;
+
+        if ($request->is('/shop')) {
+            $request->validate([
+                'quantity' => 'required|integer|min:1',
+            ]);
+        }
 
         $product = Product::findOrFail($productId);
 
-        if ($product->stock < $request->input('quantity')) return redirect()->back()->with('success', 'Stock out!');
+        if ($product->stock < $quantity) return redirect()->back()->with('success', 'Stock out!');
 
         // Check if product already in cart
         $cartItem = Cart::where('user_id', Auth::id())
@@ -48,14 +54,14 @@ class CartController extends Controller
 
         if ($cartItem) {
             // Update quantity
-            $cartItem->quantity += $request->quantity;
+            $cartItem->quantity += $quantity;
             $cartItem->save();
         } else {
             // Create new entry
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $productId,
-                'quantity' => $request->quantity,
+                'quantity' => $quantity,
             ]);
         }
 

@@ -2,10 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Customer\Pages\CustomerLogin;
+use App\Filament\Customer\Pages\CustomerRegistration;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -25,12 +28,13 @@ class CustomerPanelProvider extends PanelProvider
     {
         return $panel
             ->id('customer')
-            ->path('customer')
+            ->path('/customer')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Green,
             ])
-            ->login()
-            ->registration()
+            ->login(CustomerLogin::class)
+            ->brandName('Orneva')
+            ->registration(CustomerRegistration::class)
             ->discoverResources(in: app_path('Filament/Customer/Resources'), for: 'App\Filament\Customer\Resources')
             ->discoverPages(in: app_path('Filament/Customer/Pages'), for: 'App\Filament\Customer\Pages')
             ->pages([
@@ -39,8 +43,7 @@ class CustomerPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Customer/Widgets'), for: 'App\Filament\Customer\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
-            ])
+            ])->brandLogo(asset('frontend/img/logo.png'))
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -55,6 +58,15 @@ class CustomerPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->topNavigation()
+            ->profile()
+            ->sidebarWidth('12rem')
+            ->navigationItems([
+                NavigationItem::make('Shop More')
+                    ->url('/shop')
+                    ->icon('heroicon-o-building-storefront')
+                    ->sort(5),
+            ]);
     }
 }

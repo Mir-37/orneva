@@ -1,7 +1,5 @@
 @extends('layout.main')
 @section('content')
-    <base href="{{ url('/frontend/') }}/">
-
     {{--  Hero Section --}}
     <section id="hero">
         <h4>Limited Editions</h4>
@@ -50,7 +48,10 @@
         <div class="pro-container">
             @foreach ($featuredProducts as $product)
                 <div class="pro">
-                    <img src="{{ $product->image ? 'products/' . $product->image : 'img/products/f3.jpg' }}" alt="">
+                    <a href="{{ route('product.show', $product->slug) }}">
+                        <img src="{{ $product->image ? 'products/' . $product->image : 'img/products/f3.jpg' }}"
+                            alt="">
+                    </a>
                     <div class="des">
                         <span>{{ $product->category->name ?? 'No Category' }}</span>
                         <h5>{{ $product->name }}</h5>
@@ -61,7 +62,9 @@
                         </div>
                         <h4>${{ number_format($product->price, 2) }}</h4>
                     </div>
-                    <a href="{{ route('cart.add', $product->id) }}"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <a href="javascript:void(0);">
+                        <i class="fa-solid fa-cart-shopping add-to-cart" data-id="{{ $product->id }}"></i>
+                    </a>
                 </div>
             @endforeach
         </div>
@@ -82,7 +85,10 @@
         <div class="pro-container">
             @foreach ($newArrivals as $product)
                 <div class="pro">
-                    <img src="{{ $product->image ? 'products/' . $product->image : 'img/products/f1.jpg' }}" alt="">
+                    <a href="{{ route('product.show', $product->slug) }}">
+                        <img src="{{ $product->image ? 'products/' . $product->image : 'img/products/f3.jpg' }}"
+                            alt="">
+                    </a>
                     <div class="des">
                         <span>{{ $product->category->name ?? 'No category' }}</span>
                         <h5>{{ $product->name }}</h5>
@@ -93,39 +99,72 @@
                         </div>
                         <h4>${{ number_format($product->price, 2) }}</h4>
                     </div>
-                    <a href="{{ route('cart.add', $product->id) }}"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <a href="javascript:void(0);">
+                        <i class="fa-solid fa-cart-shopping add-to-cart" data-id="{{ $product->id }}"></i>
+                    </a>
                 </div>
             @endforeach
         </div>
     </section>
 
-    <section id="sm-banner" class="section-p1">
-        <div class="banner-box">
-            <h4>Great Deals</h4>
-            <h2>Buy 1 Get 1 Free</h2>
-            <span>Find Your Fit On ORNEVA</span>
-        </div>
-
-        <div class="banner-box banner-box2">
-            <h4>Great Deals</h4>
-            <h2>Buy 1 Get 1 Free</h2>
-            <span>Find Your Fit On ORNEVA</span>
-        </div>
-
-    </section>
-
-    <section id="banner3">
-        <div class="banner-box">
-            <h2>SEASONAL SALE</h2>
-            <h3>Winter Collection -50% OFF</h3>
-        </div>
-        <div class="banner-box banner-box2">
-            <h2>NEW FOOTWEAR COLLECTION</h2>
-            <h3>Spring/Summer 2022</h3>
-        </div>
-        <div class="banner-box banner-box3">
-            <h2>T shirts</h2>
-            <h3>New Trends</h3>
+    {{-- Small Banners --}}
+    <section id="sm-banner" class="section-p1 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="banner-box p-5 text-center border">
+                        <h4>Great Deals</h4>
+                        <h2>Buy 1 Get 1 Free</h2>
+                        <span>Find Your Fit On ORNEVA</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="banner-box banner-box2 p-5 text-center border">
+                        <h4>Great Deals</h4>
+                        <h2>Buy 1 Get 1 Free</h2>
+                        <span>Find Your Fit On ORNEVA</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
+    {{-- Banner 3 --}}
+    <section id="banner3" class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="banner-box p-4 text-center border">
+                        <h2>SEASONAL SALE</h2>
+                        <h3>Winter Collection -50% OFF</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="banner-box banner-box2 p-4 text-center border">
+                        <h2>NEW FOOTWEAR COLLECTION</h2>
+                        <h3>Spring/Summer 2022</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="banner-box banner-box3 p-4 text-center border">
+                        <h2>T Shirts</h2>
+                        <h3>New Trends</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".add-to-cart").forEach(function(icon) {
+                    icon.addEventListener("click", function() {
+                        let productId = this.getAttribute("data-id");
+                        window.location.href = "{{ url('cart/add') }}/" + productId;
+                    });
+                });
+            });
+        </script>
+    @endpush
 @endsection
